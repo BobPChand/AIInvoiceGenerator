@@ -1,0 +1,56 @@
+{
+  "expo": {
+    "name": "AI Invoice Generator",
+    "slug": "ai-invoice-generator",
+    "version": "1.0.0",
+    "sdkVersion": "52.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0A1628"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "ai.aiinvoicegenerator.app",
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "AI Invoice Generator uses your microphone for hands-free voice input.",
+        "NSSpeechRecognitionUsageDescription": "AI Invoice Generator uses speech recognition to capture invoice details from voice.",
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0A1628"
+      },
+      "package": "ai.aiinvoicegenerator.app",
+      "permissions": [
+        "RECORD_AUDIO",
+        "RECEIVE_BOOT_COMPLETED",
+        "VIBRATE"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#0A1628"
+        }
+      ],
+      "expo-asset",
+      "expo-font"
+    ],
+    "extra": {
+      "apiEndpoint": "https://superagent-02ccfade.base44.app/functions/aiInvoice"
+    },
+    "owner": "aibusinessassistant.ai"
+  }
+}

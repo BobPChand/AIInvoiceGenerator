@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Invoice & Quote Generator — Professional Invoices in 30 Seconds</title>
+  <meta name="description" content="Create professional Canadian invoices and quotes in seconds using AI. Automatic GST/HST calculations, PDF export, and email delivery. Built for Canadian freelancers and small businesses."/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --blue: #1E6FD9; --blue-dark: #1558B0; --blue-light: #EBF2FF;
+      --green: #34C759; --dark: #1C1C1E; --gray: #6B7280;
+      --light: #F9FAFB; --white: #ffffff; --radius: 16px;
+      --purple: #7C3AED; --purple-light: #F3EEFF;
+    }
+    body { font-family: 'Inter', sans-serif; color: var(--dark); background: var(--white); line-height: 1.6; }
+    a { color: inherit; text-decoration: none; }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(255,255,255,0.92); backdrop-filter: blur(12px);
+      border-bottom: 1px solid #E5E7EB;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%; height: 68px;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 18px; color: var(--purple); }
+    .nav-links { display: flex; gap: 32px; font-size: 15px; font-weight: 500; color: var(--gray); }
+    .nav-links a:hover { color: var(--purple); }
+    .nav-cta { background: var(--purple); color: var(--white); padding: 10px 22px; border-radius: 10px; font-weight: 600; font-size: 14px; transition: background 0.2s; }
+    .nav-cta:hover { background: #6D28D9; }
+
+    .hero {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      padding: 100px 5% 60px;
+      background: linear-gradient(160deg, #F5F0FF 0%, #ffffff 60%, #F0FFF4 100%);
+      text-align: center;
+    }
+    .hero-inner { max-width: 760px; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--purple-light); color: var(--purple); padding: 8px 18px; border-radius: 50px; font-size: 13px; font-weight: 600; margin-bottom: 28px; }
+    .hero h1 { font-size: clamp(36px, 6vw, 64px); font-weight: 900; line-height: 1.12; letter-spacing: -1.5px; margin-bottom: 20px; }
+    .hero h1 span { color: var(--purple); }
+    .hero p { font-size: 18px; color: var(--gray); max-width: 560px; margin: 0 auto 36px; }
+    .hero-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 28px; }
+    .btn-primary { background: var(--purple); color: var(--white); padding: 16px 36px; border-radius: 14px; font-weight: 700; font-size: 17px; box-shadow: 0 8px 24px rgba(124,58,237,0.3); transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+    .btn-primary:hover { background: #6D28D9; transform: translateY(-2px); }
+    .btn-secondary { background: var(--white); color: var(--dark); padding: 16px 36px; border-radius: 14px; font-weight: 600; font-size: 17px; border: 2px solid #E5E7EB; transition: all 0.2s; }
+    .btn-secondary:hover { border-color: var(--purple); color: var(--purple); }
+    .hero-trial { font-size: 13px; color: var(--gray); }
+    .hero-trial strong { color: var(--green); }
+
+    /* DEMO INVOICE */
+    .demo-wrap { margin-top: 40px; }
+    .demo-invoice { background: var(--white); border-radius: 20px; padding: 28px; box-shadow: 0 20px 60px rgba(0,0,0,0.12); max-width: 460px; margin: 0 auto; text-align: left; border: 1px solid #E5E7EB; }
+    .demo-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+    .demo-title { font-size: 22px; font-weight: 900; color: var(--purple); }
+    .demo-badge { background: var(--green); color: #fff; padding: 4px 12px; border-radius: 50px; font-size: 12px; font-weight: 700; }
+    .demo-client { font-size: 13px; color: var(--gray); margin-bottom: 20px; }
+    .demo-client strong { color: var(--dark); display: block; font-size: 15px; }
+    .demo-items { border-top: 1px solid #F3F4F6; padding-top: 16px; margin-bottom: 16px; }
+    .demo-item { display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0; }
+    .demo-item span { color: var(--gray); }
+    .demo-totals { border-top: 1px solid #F3F4F6; padding-top: 12px; }
+    .demo-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--gray); margin-bottom: 4px; }
+    .demo-total { display: flex; justify-content: space-between; font-size: 18px; font-weight: 800; color: var(--dark); margin-top: 8px; }
+    .demo-ai-badge { background: var(--purple-light); color: var(--purple); padding: 8px 14px; border-radius: 10px; font-size: 12px; font-weight: 600; margin-top: 16px; text-align: center; }
+
+    .trust-bar { padding: 40px 5%; text-align: center; background: var(--white); }
+    .trust-bar p { font-size: 13px; color: #9CA3AF; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 20px; }
+    .trust-logos { display: flex; gap: 40px; justify-content: center; align-items: center; flex-wrap: wrap; opacity: 0.4; font-weight: 700; font-size: 16px; color: var(--gray); }
+
+    .features { padding: 80px 5%; background: var(--light); }
+    .section-label { text-align: center; font-size: 13px; font-weight: 600; color: var(--purple); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+    .section-title { text-align: center; font-size: clamp(28px, 4vw, 42px); font-weight: 800; letter-spacing: -0.5px; margin-bottom: 56px; }
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; max-width: 1100px; margin: 0 auto; }
+    .feature-card { background: var(--white); border-radius: var(--radius); padding: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.05); transition: transform 0.2s; }
+    .feature-card:hover { transform: translateY(-4px); }
+    .feature-icon { width: 52px; height: 52px; border-radius: 14px; background: var(--purple-light); display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 16px; }
+    .feature-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+    .feature-card p { font-size: 14px; color: var(--gray); }
+
+    .how-it-works { padding: 80px 5%; background: var(--white); }
+    .steps { display: flex; gap: 32px; max-width: 900px; margin: 0 auto; flex-wrap: wrap; justify-content: center; }
+    .step { text-align: center; flex: 1; min-width: 200px; }
+    .step-num { width: 56px; height: 56px; background: var(--purple); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 900; margin: 0 auto 16px; }
+    .step h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+    .step p { font-size: 14px; color: var(--gray); }
+    .step-arrow { display: flex; align-items: center; color: #D1D5DB; font-size: 28px; margin-top: -20px; }
+
+    .pricing { padding: 80px 5%; background: var(--light); }
+    .pricing-cards { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; max-width: 800px; margin: 0 auto; }
+    .pricing-card { background: var(--white); border-radius: 24px; padding: 36px 32px; flex: 1; min-width: 280px; border: 2px solid transparent; position: relative; }
+    .pricing-card.popular { background: var(--purple); color: var(--white); box-shadow: 0 20px 50px rgba(124,58,237,0.3); }
+    .popular-badge { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: var(--green); color: var(--white); padding: 6px 20px; border-radius: 50px; font-size: 12px; font-weight: 700; }
+    .pricing-plan { font-size: 14px; font-weight: 600; opacity: 0.7; margin-bottom: 8px; }
+    .pricing-price { font-size: 48px; font-weight: 900; letter-spacing: -2px; }
+    .pricing-price span { font-size: 18px; font-weight: 500; opacity: 0.7; }
+    .pricing-desc { font-size: 14px; opacity: 0.7; margin-bottom: 28px; margin-top: 4px; }
+    .pricing-features { list-style: none; margin-bottom: 32px; display: flex; flex-direction: column; gap: 12px; }
+    .pricing-features li { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+    .check { width: 20px; height: 20px; background: var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #fff; font-size: 11px; }
+    .pricing-btn { width: 100%; padding: 14px; border-radius: 12px; font-weight: 700; font-size: 15px; text-align: center; cursor: pointer; border: none; display: block; background: var(--purple); color: var(--white); transition: all 0.2s; }
+    .pricing-card.popular .pricing-btn { background: var(--white); color: var(--purple); }
+    .pricing-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    .pricing-note { text-align: center; font-size: 13px; color: var(--gray); margin-top: 20px; }
+
+    .testimonials { padding: 80px 5%; background: var(--white); }
+    .testi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 1000px; margin: 0 auto; }
+    .testi-card { background: var(--light); border-radius: var(--radius); padding: 24px; }
+    .stars { color: #FBBF24; font-size: 16px; margin-bottom: 12px; }
+    .testi-card p { font-size: 14px; color: var(--gray); margin-bottom: 16px; font-style: italic; }
+    .testi-author { display: flex; align-items: center; gap: 10px; }
+    .testi-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--purple-light); display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--purple); font-size: 14px; }
+    .testi-name { font-weight: 600; font-size: 14px; }
+    .testi-role { font-size: 12px; color: var(--gray); }
+
+    .cta-section { padding: 80px 5%; background: linear-gradient(135deg, var(--purple) 0%, #4C1D95 100%); text-align: center; color: var(--white); }
+    .cta-section h2 { font-size: clamp(28px, 4vw, 48px); font-weight: 900; letter-spacing: -1px; margin-bottom: 16px; }
+    .cta-section p { font-size: 17px; opacity: 0.85; max-width: 500px; margin: 0 auto 36px; }
+    .btn-white { background: var(--white); color: var(--purple); padding: 16px 40px; border-radius: 14px; font-weight: 700; font-size: 17px; display: inline-block; transition: all 0.2s; }
+    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+
+    footer { padding: 40px 5%; background: var(--dark); color: #9CA3AF; text-align: center; font-size: 13px; }
+    footer strong { color: var(--white); }
+    .footer-links { display: flex; gap: 24px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+    .footer-links a:hover { color: var(--white); }
+
+    @media (max-width: 640px) { .nav-links { display: none; } .pricing-cards { flex-direction: column; } .step-arrow { display: none; } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">📄 AI Invoice Generator</div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#how">How it works</a>
+    <a href="#pricing">Pricing</a>
+  </div>
+  <a class="nav-cta" href="#pricing">Start Free Trial</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">🇨🇦 Built for Canadian Business</div>
+    <h1>Create a Professional<br/><span>Invoice in 30 Seconds</span></h1>
+    <p>Just describe your work — AI generates a polished invoice with automatic GST/HST, sends it to your client, and tracks payment. No spreadsheets, no templates.</p>
+    <div class="hero-btns">
+      <a class="btn-primary" href="#pricing">🚀 Start Free Trial</a>
+      <a class="btn-secondary" href="#how">See How It Works</a>
+    </div>
+    <div class="hero-trial"><strong>7-day free trial</strong> · No credit card required · Cancel anytime</div>
+
+    <div class="demo-wrap">
+      <div class="demo-invoice">
+        <div class="demo-header">
+          <div>
+            <div class="demo-title">INVOICE #001</div>
+            <div style="font-size:12px;color:#9CA3AF;margin-top:2px;">Issued: June 26, 2026 · Due: July 26, 2026</div>
+          </div>
+          <div class="demo-badge">DRAFT</div>
+        </div>
+        <div class="demo-client">
+          <span>Bill To:</span>
+          <strong>John Smith — ABC Construction</strong>
+          john@abcconstruction.ca
+        </div>
+        <div class="demo-items">
+          <div class="demo-item"><span>Website Design (10 hrs × $150)</span><strong>$1,500.00</strong></div>
+          <div class="demo-item"><span>Consulting (2 hrs × $200)</span><strong>$400.00</strong></div>
+        </div>
+        <div class="demo-totals">
+          <div class="demo-row"><span>Subtotal</span><span>$1,900.00</span></div>
+          <div class="demo-row"><span>HST (13% — Ontario)</span><span>$247.00</span></div>
+          <div class="demo-total"><span>Total CAD</span><span>$2,147.00</span></div>
+        </div>
+        <div class="demo-ai-badge">⚡ Generated by AI in 3 seconds from a voice note</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="trust-bar">
+  <p>Trusted by Canadian freelancers & contractors</p>
+  <div class="trust-logos">
+    <span>Stripe</span><span>OpenAI GPT-4o</span><span>CRA Compliant</span><span>App Store</span><span>Google Play</span>
+  </div>
+</div>
+
+<section class="features" id="features">
+  <p class="section-label">Everything you need</p>
+  <h2 class="section-title">Stop wasting time on paperwork</h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🤖</div>
+      <h3>AI Invoice Generation</h3>
+      <p>Just say "Invoice Mike for 5 hours of plumbing at $85/hr" — AI fills in everything instantly.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🇨🇦</div>
+      <h3>Auto GST/HST by Province</h3>
+      <p>Correct tax rates applied automatically for all 13 provinces and territories. Always CRA-compliant.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📄</div>
+      <h3>Professional PDF Export</h3>
+      <p>Branded, print-ready PDFs generated instantly. Looks like it was designed by a professional.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📧</div>
+      <h3>Send Directly to Clients</h3>
+      <p>Email your invoice to the client right from the app — no downloading, attaching, or switching apps.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💰</div>
+      <h3>Payment Tracking</h3>
+      <p>Track draft, sent, viewed, paid, and overdue invoices all in one place. Get notified on overdue.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📋</div>
+      <h3>Quotes & Estimates</h3>
+      <p>Create quotes in seconds, then convert to a paid invoice with one tap when the job is approved.</p>
+    </div>
+  </div>
+</section>
+
+<section class="how-it-works" id="how">
+  <p class="section-label">Simple as 1-2-3</p>
+  <h2 class="section-title">From job description to sent invoice in 30 seconds</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>Describe the work</h3>
+      <p>Type or speak what you did — "Painted 3 rooms for Sarah, 8 hours at $60/hr"</p>
+    </div>
+    <div class="step-arrow">→</div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>AI builds the invoice</h3>
+      <p>GPT-4o generates line items, calculates HST/GST for your province, totals everything</p>
+    </div>
+    <div class="step-arrow">→</div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h3>Review & send</h3>
+      <p>Tap to send the PDF directly to your client's email. Done.</p>
+    </div>
+  </div>
+</section>
+
+<section class="pricing" id="pricing">
+  <p class="section-label">Simple pricing</p>
+  <h2 class="section-title">One flat rate. Unlimited invoices.</h2>
+  <div class="pricing-cards">
+    <div class="pricing-card">
+      <div class="pricing-plan">Monthly</div>
+      <div class="pricing-price">CA$9<span>.99/mo</span></div>
+      <div class="pricing-desc">Billed monthly · Cancel anytime</div>
+      <ul class="pricing-features">
+        <li><span class="check">✓</span> Unlimited invoices & quotes</li>
+        <li><span class="check">✓</span> AI generation from voice/text</li>
+        <li><span class="check">✓</span> Auto GST/HST for all provinces</li>
+        <li><span class="check">✓</span> PDF export & email sending</li>
+        <li><span class="check">✓</span> Payment tracking dashboard</li>
+      </ul>
+      <a class="pricing-btn" href="https://buy.stripe.com/aFa8wPgfygIz6Xp7YE6Vq00" target="_blank">Start 7-Day Free Trial</a>
+    </div>
+    <div class="pricing-card popular">
+      <div class="popular-badge">🔥 Best Value</div>
+      <div class="pricing-plan">Yearly</div>
+      <div class="pricing-price">CA$79<span>.99/yr</span></div>
+      <div class="pricing-desc">Save 33% · Only CA$6.67/month</div>
+      <ul class="pricing-features">
+        <li><span class="check">✓</span> Everything in Monthly</li>
+        <li><span class="check">✓</span> Client contact management</li>
+        <li><span class="check">✓</span> Overdue invoice alerts</li>
+        <li><span class="check">✓</span> Priority AI responses</li>
+        <li><span class="check">✓</span> 7-day free trial included</li>
+      </ul>
+      <a class="pricing-btn" href="https://buy.stripe.com/aFa8wPgfygIz6Xp7YE6Vq00" target="_blank">Start 7-Day Free Trial</a>
+    </div>
+  </div>
+  <p class="pricing-note">🔒 Secured by Stripe · No hidden fees · Cancel anytime</p>
+</section>
+
+<section class="testimonials">
+  <p class="section-label">What Canadians say</p>
+  <h2 class="section-title">Freelancers love it</h2>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="stars">★★★★★</div>
+      <p>"I used to spend 20 minutes per invoice in Excel. Now I just talk into my phone and it's done. The HST is always right too."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">DM</div>
+        <div><div class="testi-name">Dan M.</div><div class="testi-role">Electrician, Ontario</div></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="stars">★★★★★</div>
+      <p>"As a freelance designer I send 15-20 invoices a month. This app paid for itself in the first week. Absolute game changer."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">KL</div>
+        <div><div class="testi-name">Kim L.</div><div class="testi-role">Graphic Designer, BC</div></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="stars">★★★★★</div>
+      <p>"The quote-to-invoice conversion is brilliant. I send a quote, client approves, one tap and it becomes an invoice. Love it."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">RC</div>
+        <div><div class="testi-name">Ryan C.</div><div class="testi-role">Contractor, Alberta</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <h2>Start invoicing smarter today</h2>
+  <p>Join Canadian freelancers and contractors who get paid faster with AI-powered invoicing.</p>
+  <a class="btn-white" href="https://buy.stripe.com/aFa8wPgfygIz6Xp7YE6Vq00" target="_blank">🚀 Start Your Free Trial</a>
+  <p style="margin-top:16px;font-size:13px;opacity:0.7;">7 days free · CA$9.99/month after · Cancel anytime</p>
+</section>
+
+<footer>
+  <div class="footer-links">
+    <a href="#">Privacy Policy</a>
+    <a href="#">Terms of Service</a>
+    <a href="mailto:hello@contentaipro.ai">Contact</a>
+    <a href="#pricing">Pricing</a>
+  </div>
+  <p><strong>AI Invoice & Quote Generator</strong> · Built by Bob Chand · © 2026 · All rights reserved</p>
+  <p style="margin-top:8px;">Payments by Stripe · Powered by OpenAI GPT-4o · 🇨🇦 Made for Canada</p>
+</footer>
+
+</body>
+</html>
