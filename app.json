@@ -49,7 +49,10 @@
       "expo-font"
     ],
     "extra": {
-      "apiEndpoint": "https://superagent-02ccfade.base44.app/functions/aiInvoice"
+      "apiEndpoint": "https://superagent-02ccfade.base44.app/functions/aiInvoice",
+      "eas": {
+        "projectId": "9489c285-9888-4bdd-b7a9-2e91a696e752"
+      }
     },
     "owner": "aibusinessassistant.ai"
   }
