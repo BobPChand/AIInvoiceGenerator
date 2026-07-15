@@ -1,5 +1,9 @@
 # AI Invoice Generator
 
+## Repository Purpose
+This repository is the dedicated codebase for AI Invoice Generator.
+It should not be used for ContentAI Pro or AI Resume Builder Pro changes.
+
 AI-powered invoice and quote app built with React Native / Expo.
 - GPT-4o powered invoice assistant
 - Invoice and quote generation
