@@ -1,0 +1,70 @@
+
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=688,initial-scale=1.0">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{width:688px;height:917px;background:#F2F4F8;font-family:-apple-system,BlinkMacSystemFont,sans-serif;overflow:hidden}
+.nav{height:76px;background:#0A1628;display:flex;align-items:flex-end;padding:0 32px 12px}
+.nav-title{color:white;font-size:22px;font-weight:700}
+.content{padding:32px;height:calc(917px - 76px - 72px);overflow:hidden}
+.header{text-align:center;margin-bottom:20px}
+.badge{width:56px;height:56px;border-radius:16px;background:#1E6FD9;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-size:20px;font-weight:800;color:white}
+.title{font-size:28px;font-weight:800;color:#1C1C1E}
+.subtitle{font-size:18px;font-weight:700;color:#1E6FD9}
+.trial{font-size:15px;color:#34C759;font-weight:600;margin-top:4px}
+.features{background:white;border-radius:16px;padding:16px 20px;margin-bottom:16px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.feature{display:flex;align-items:center;gap:8px;padding:6px 0}
+.feature-icon{width:28px;height:28px;border-radius:8px;background:#EBF2FF;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#1E6FD9}
+.feature-text{flex:1;font-size:14px;color:#1C1C1E}
+.check{color:#34C759;font-size:16px}
+.plans{display:flex;gap:10px;margin-bottom:14px}
+.plan{flex:1;background:white;border-radius:14px;padding:14px;border:2px solid #E0E0E0;text-align:center}
+.plan.selected{border-color:#1E6FD9}
+.plan-name{font-size:16px;font-weight:700;color:#1C1C1E}
+.plan-badge{background:#1E6FD9;color:white;font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;display:inline-block;margin-top:3px}
+.plan-price{font-size:22px;font-weight:800;color:#1C1C1E;margin-top:6px}
+.plan-period{font-size:12px;color:#999}
+.cta{background:#1E6FD9;border-radius:14px;padding:14px;text-align:center;margin-bottom:8px}
+.cta-text{color:white;font-size:18px;font-weight:700}
+.cta-sub{color:rgba(255,255,255,0.8);font-size:12px;margin-top:2px}
+.restore{text-align:center;padding:4px}
+.restore-text{color:#1E6FD9;font-size:15px;font-weight:600}
+.footer{font-size:10px;color:#999;text-align:center;margin-top:6px;padding:0 20px}
+.tabbar{height:72px;background:#0A1628;display:flex;justify-content:space-around;align-items:flex-start;padding-top:6px;border-top:1px solid #1C2E4A}
+.tab{display:flex;flex-direction:column;align-items:center;gap:2px}
+.tab-icon{font-size:18px;font-weight:700}
+.tab-label{font-size:10px;font-weight:600}
+.tab.active{color:#4A90E2}.tab.inactive{color:#8E8E93}
+</style></head><body>
+<div class="nav"><div class="nav-title">Upgrade to Pro</div></div>
+<div class="content">
+<div class="header">
+<div class="badge">AI</div>
+<div class="title">AI Invoice Generator Pro</div>
+<div class="subtitle">Unlock Unlimited Invoicing</div>
+<div class="trial">Start your 7-day FREE trial</div>
+</div>
+<div class="features">
+<div class="feature"><div class="feature-icon">DOC</div><div class="feature-text">Unlimited AI Invoices</div><div class="check">V</div></div>
+<div class="feature"><div class="feature-icon">CAL</div><div class="feature-text">Auto GST/HST by Province</div><div class="check">V</div></div>
+<div class="feature"><div class="feature-icon">PDF</div><div class="feature-text">Professional PDF Export</div><div class="check">V</div></div>
+<div class="feature"><div class="feature-icon">CLI</div><div class="feature-text">Client Management</div><div class="check">V</div></div>
+<div class="feature"><div class="feature-icon">CLK</div><div class="feature-text">Payment Tracking</div><div class="check">V</div></div>
+<div class="feature"><div class="feature-icon">SHD</div><div class="feature-text">Data Encryption</div><div class="check">V</div></div>
+</div>
+<div class="plans">
+<div class="plan"><div class="plan-name">Monthly</div><div class="plan-price">CA$9.99</div><div class="plan-period">/month</div></div>
+<div class="plan selected"><div class="plan-name">Yearly</div><div class="plan-badge">Save 33%</div><div class="plan-price">CA$79.99</div><div class="plan-period">/year</div></div>
+</div>
+<div class="cta"><div class="cta-text">Start Free Trial</div><div class="cta-sub">Then CA$79.99/year - Cancel anytime</div></div>
+<div class="restore"><div class="restore-text">Restore Purchases</div></div>
+<div class="footer">Payment will be charged to your Apple ID. Subscriptions automatically renew unless cancelled at least 24 hours before the end of the current period.</div>
+</div>
+<div class="tabbar">
+<div class="tab inactive"><div class="tab-icon">Grid</div><div class="tab-label">Dashboard</div></div>
+<div class="tab inactive"><div class="tab-icon">Doc</div><div class="tab-label">Invoice</div></div>
+<div class="tab active"><div class="tab-icon">Rocket</div><div class="tab-label">Upgrade</div></div>
+<div class="tab inactive"><div class="tab-icon">Chart</div><div class="tab-label">Insights</div></div>
+<div class="tab inactive"><div class="tab-icon">Gear</div><div class="tab-label">Settings</div></div>
+</div>
+</body></html>

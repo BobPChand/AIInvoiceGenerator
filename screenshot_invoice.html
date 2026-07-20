@@ -1,0 +1,64 @@
+
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=428,initial-scale=1.0">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{width:428px;height:926px;background:#F2F4F8;font-family:-apple-system,BlinkMacSystemFont,sans-serif;overflow:hidden}
+.nav{height:96px;background:#0A1628;display:flex;align-items:flex-end;padding:0 20px 14px}
+.nav-title{color:white;font-size:20px;font-weight:700}
+.nav-btn{color:#4A90E2;font-size:16px;font-weight:600;margin-left:auto}
+.content{padding:20px;height:calc(926px - 96px - 83px);overflow:hidden}
+.card{background:white;border-radius:16px;padding:16px;margin-bottom:14px}
+.card-title{font-size:14px;font-weight:700;color:#1C1C1E;margin-bottom:10px}
+.input-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #F0F0F0}
+.input-row:last-child{border-bottom:none}
+.input-label{font-size:14px;color:#8E8E93}
+.input-value{font-size:14px;color:#1C1C1E;font-weight:600}
+.line-item{display:flex;justify-content:space-between;padding:8px 0}
+.li-name{font-size:14px;color:#1C1C1E;font-weight:500}
+.li-qty{font-size:12px;color:#999}
+.li-amount{font-size:14px;color:#1C1C1E;font-weight:600}
+.tax-row{display:flex;justify-content:space-between;padding:6px 0}
+.tax-label{font-size:13px;color:#8E8E93}
+.tax-value{font-size:13px;color:#1C1C1E;font-weight:500}
+.total-row{display:flex;justify-content:space-between;padding-top:10px;border-top:2px solid #F0F0F0;margin-top:6px}
+.total-label{font-size:16px;font-weight:700;color:#1C1C1E}
+.total-value{font-size:18px;font-weight:800;color:#1E6FD9}
+.generate-btn{background:#1E6FD9;border-radius:14px;padding:14px;text-align:center;margin-top:6px}
+.generate-btn-text{color:white;font-size:16px;font-weight:700}
+.tabbar{height:83px;background:#0A1628;display:flex;justify-content:space-around;align-items:flex-start;padding-top:8px;border-top:1px solid #1C2E4A}
+.tab{display:flex;flex-direction:column;align-items:center;gap:3px}
+.tab-icon{font-size:22px;font-weight:700}
+.tab-label{font-size:10px;font-weight:600}
+.tab.active{color:#4A90E2}.tab.inactive{color:#8E8E93}
+</style></head><body>
+<div class="nav"><div class="nav-title">Create Invoice</div><div class="nav-btn">Save</div></div>
+<div class="content">
+<div class="card">
+<div class="card-title">Client</div>
+<div class="input-row"><div class="input-label">Name</div><div class="input-value">Acme Corp</div></div>
+<div class="input-row"><div class="input-label">Email</div><div class="input-value">billing@acme.com</div></div>
+<div class="input-row"><div class="input-label">Province</div><div class="input-value">British Columbia</div></div>
+</div>
+<div class="card">
+<div class="card-title">Line Items</div>
+<div class="line-item"><div><div class="li-name">Web Development</div><div class="li-qty">40 hrs x $70</div></div><div class="li-amount">CA$2,800.00</div></div>
+<div class="line-item"><div><div class="li-name">Consulting</div><div class="li-qty">10 hrs x $120</div></div><div class="li-amount">CA$1,200.00</div></div>
+</div>
+<div class="card">
+<div class="card-title">Tax Summary</div>
+<div class="tax-row"><div class="tax-label">Subtotal</div><div class="tax-value">CA$4,000.00</div></div>
+<div class="tax-row"><div class="tax-label">GST (5%)</div><div class="tax-value">CA$200.00</div></div>
+<div class="tax-row"><div class="tax-label">PST (7%)</div><div class="tax-value">CA$280.00</div></div>
+<div class="total-row"><div class="total-label">Total</div><div class="total-value">CA$4,480.00</div></div>
+</div>
+<div class="generate-btn"><div class="generate-btn-text">Generate PDF Invoice</div></div>
+</div>
+<div class="tabbar">
+<div class="tab inactive"><div class="tab-icon">Grid</div><div class="tab-label">Dashboard</div></div>
+<div class="tab active"><div class="tab-icon">Doc</div><div class="tab-label">Invoice</div></div>
+<div class="tab inactive"><div class="tab-icon">Rocket</div><div class="tab-label">Upgrade</div></div>
+<div class="tab inactive"><div class="tab-icon">Chart</div><div class="tab-label">Insights</div></div>
+<div class="tab inactive"><div class="tab-icon">Gear</div><div class="tab-label">Settings</div></div>
+</div>
+</body></html>

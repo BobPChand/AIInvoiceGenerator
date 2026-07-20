@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=428,initial-scale=1.0">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{width:428px;height:926px;background:#0A1628;font-family:-apple-system,BlinkMacSystemFont,sans-serif;overflow:hidden}
+.nav{height:96px;background:#0A1628;display:flex;align-items:flex-end;padding:0 20px 14px}
+.nav-title{color:white;font-size:28px;font-weight:800}
+.nav-sub{color:#8E9AB5;font-size:14px;margin-left:auto}
+.content{padding:20px;height:calc(926px - 96px - 83px);overflow:hidden}
+.stat-row{display:flex;gap:12px;margin-bottom:16px}
+.stat-card{flex:1;background:#1C2E4A;border-radius:16px;padding:16px}
+.stat-label{color:#8E9AB5;font-size:12px;font-weight:600}
+.stat-value{color:white;font-size:24px;font-weight:800;margin-top:6px}
+.stat-delta{color:#34C759;font-size:12px;font-weight:600;margin-top:4px}
+.section-title{color:white;font-size:18px;font-weight:700;margin:8px 0 12px}
+.invoice-list{display:flex;flex-direction:column;gap:10px}
+.invoice-item{background:#1C2E4A;border-radius:14px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
+.invoice-left{display:flex;align-items:center;gap:12px}
+.invoice-icon{width:40px;height:40px;border-radius:10px;background:#2A3F66;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#4A90E2}
+.invoice-info{display:flex;flex-direction:column}
+.invoice-name{color:white;font-size:15px;font-weight:600}
+.invoice-date{color:#8E9AB5;font-size:12px}
+.invoice-amount{color:white;font-size:16px;font-weight:700}
+.status-badge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:100px;margin-top:3px;width:fit-content}
+.status-paid{background:rgba(52,199,89,0.15);color:#34C759}
+.status-pending{background:rgba(255,149,0,0.15);color:#FF9500}
+.status-overdue{background:rgba(255,59,48,0.15);color:#FF3B30}
+.quick-actions{display:flex;gap:10px;margin-bottom:16px}
+.quick-btn{flex:1;background:#1E6FD9;border-radius:12px;padding:10px;text-align:center}
+.quick-btn-text{color:white;font-size:13px;font-weight:600}
+.tabbar{height:83px;background:#0A1628;display:flex;justify-content:space-around;align-items:flex-start;padding-top:8px;border-top:1px solid #1C2E4A}
+.tab{display:flex;flex-direction:column;align-items:center;gap:3px}
+.tab-icon{font-size:22px;font-weight:700}
+.tab-label{font-size:10px;font-weight:600}
+.tab.active{color:#4A90E2}.tab.inactive{color:#8E8E93}
+</style></head><body>
+<div class="nav"><div class="nav-title">Dashboard</div><div class="nav-sub">Jul 2026</div></div>
+<div class="content">
+<div class="stat-row">
+<div class="stat-card"><div class="stat-label">TOTAL INVOICED</div><div class="stat-value">CA$12,450</div><div class="stat-delta">+15% vs last month</div></div>
+<div class="stat-card"><div class="stat-label">OUTSTANDING</div><div class="stat-value">CA$3,200</div><div class="stat-delta">2 pending</div></div>
+</div>
+<div class="quick-actions">
+<div class="quick-btn"><div class="quick-btn-text">+ New Invoice</div></div>
+<div class="quick-btn"><div class="quick-btn-text">+ New Quote</div></div>
+</div>
+<div class="section-title">Recent Invoices</div>
+<div class="invoice-list">
+<div class="invoice-item"><div class="invoice-left"><div class="invoice-icon">INV</div><div class="invoice-info"><div class="invoice-name">Acme Corp</div><div class="invoice-date">Jul 15, 2026</div><div class="status-badge status-paid">Paid</div></div></div><div class="invoice-amount">CA$2,800</div></div>
+<div class="invoice-item"><div class="invoice-left"><div class="invoice-icon">INV</div><div class="invoice-info"><div class="invoice-name">TechFlow Ltd</div><div class="invoice-date">Jul 10, 2026</div><div class="status-badge status-pending">Pending</div></div></div><div class="invoice-amount">CA$1,600</div></div>
+<div class="invoice-item"><div class="invoice-left"><div class="invoice-icon">INV</div><div class="invoice-info"><div class="invoice-name">Greenleaf Co</div><div class="invoice-date">Jul 5, 2026</div><div class="status-badge status-paid">Paid</div></div></div><div class="invoice-amount">CA$3,200</div></div>
+<div class="invoice-item"><div class="invoice-left"><div class="invoice-icon">INV</div><div class="invoice-info"><div class="invoice-name">Northwind Inc</div><div class="invoice-date">Jul 1, 2026</div><div class="status-badge status-overdue">Overdue</div></div></div><div class="invoice-amount">CA$1,200</div></div>
+</div>
+</div>
+<div class="tabbar">
+<div class="tab active"><div class="tab-icon">Grid</div><div class="tab-label">Dashboard</div></div>
+<div class="tab inactive"><div class="tab-icon">Doc</div><div class="tab-label">Invoice</div></div>
+<div class="tab inactive"><div class="tab-icon">Rocket</div><div class="tab-label">Upgrade</div></div>
+<div class="tab inactive"><div class="tab-icon">Chart</div><div class="tab-label">Insights</div></div>
+<div class="tab inactive"><div class="tab-icon">Gear</div><div class="tab-label">Settings</div></div>
+</div>
+</body></html>

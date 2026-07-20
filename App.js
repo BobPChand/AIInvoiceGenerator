@@ -11,6 +11,7 @@ import InvoiceScreen from './src/screens/InvoiceScreen';
 import InsightsScreen from './src/screens/InsightsScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 import PaywallScreen from './src/screens/PaywallScreen';
+import { initializeRevenueCat } from './src/services/RevenueCatService';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -25,6 +26,7 @@ const Tab = createBottomTabNavigator();
 export default function App() {
   useEffect(() => {
     registerForPushNotifications();
+    initializeRevenueCat();
   }, []);
 
   async function registerForPushNotifications() {

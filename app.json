@@ -21,7 +21,7 @@
         "NSSpeechRecognitionUsageDescription": "AI Invoice Generator uses speech recognition to capture invoice details from voice.",
         "ITSAppUsesNonExemptEncryption": false
       },
-      "buildNumber": "6"
+      "buildNumber": "8"
     },
     "android": {
       "adaptiveIcon": {
@@ -48,7 +48,15 @@
         }
       ],
       "expo-asset",
-      "expo-font"
+      "expo-font",
+      [
+        "react-native-purchases",
+        {
+          "apiKeys": {
+            "ios": "appl_dVKsQyqzHbXPEdFVmTTJqRvRTeL"
+          }
+        }
+      ]
     ],
     "extra": {
       "apiEndpoint": "https://superagent-02ccfade.base44.app/functions/aiInvoice",

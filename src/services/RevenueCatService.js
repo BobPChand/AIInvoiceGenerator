@@ -1,36 +1,67 @@
-// Development mock for RevenueCat / react-native-purchases.
-// This module intentionally avoids importing native modules so the Expo
-// managed workflow can run during development. Replace with the real
-// implementation when building production binaries.
+import { Platform } from 'react-native';
+import Purchases, { LOG_LEVEL } from 'react-native-purchases';
+
+// RevenueCat Apple public key
+const REVENUECAT_IOS_KEY = 'appl_dVKsQyqzHbXPEdFVmTTJqRvRTeL';
 
 export const ENTITLEMENT_PRO = 'pro';
 
+let initialized = false;
+
 export const initializeRevenueCat = async () => {
-  if (__DEV__) {
-    console.warn('initializeRevenueCat: running in DEV mode; RevenueCat is mocked.');
+  if (initialized) return;
+  try {
+    await Purchases.setLogLevel(LOG_LEVEL.DEBUG);
+    await Purchases.configure({
+      apiKey: REVENUECAT_IOS_KEY,
+      appUserID: null,
+    });
+    initialized = true;
+  } catch (e) {
+    console.error('RevenueCat init error:', e);
   }
-  return;
 };
 
-export const getOfferings = async (publicApiKey = null) => {
-  if (__DEV__) {
-    console.warn(`initializeRevenueCat: RevenueCat public API key supplied: ${Boolean(publicApiKey)}`);
+export const getOfferings = async () => {
+  try {
+    const offerings = await Purchases.getOfferings();
+    return offerings.current;
+  } catch (e) {
+    console.error('getOfferings error:', e);
     return null;
   }
-  return null;
 };
 
-export const purchasePackage = async () => {
-  if (__DEV__) return { success: false, isActive: false, cancelled: true };
-  return { success: false, isActive: false, cancelled: true };
+export const purchasePackage = async (pkg) => {
+  try {
+    const { customerInfo } = await Purchases.purchasePackage(pkg);
+    const isActive = customerInfo.entitlements.active[ENTITLEMENT_PRO] != null;
+    return { success: true, isActive, cancelled: false, customerInfo };
+  } catch (e) {
+    if (e.userCancelled) {
+      return { success: false, isActive: false, cancelled: true };
+    }
+    throw e;
+  }
 };
 
 export const restorePurchases = async () => {
-  if (__DEV__) return { success: false, isActive: false };
-  return { success: false, isActive: false };
+  try {
+    const customerInfo = await Purchases.restorePurchases();
+    const isActive = customerInfo.entitlements.active[ENTITLEMENT_PRO] != null;
+    return { success: true, isActive, customerInfo };
+  } catch (e) {
+    console.error('restorePurchases error:', e);
+    return { success: false, isActive: false };
+  }
 };
 
 export const checkSubscriptionStatus = async () => {
-  if (__DEV__) return false;
-  return false;
+  try {
+    const customerInfo = await Purchases.getCustomerInfo();
+    return customerInfo.entitlements.active[ENTITLEMENT_PRO] != null;
+  } catch (e) {
+    console.error('checkSubscriptionStatus error:', e);
+    return false;
+  }
 };

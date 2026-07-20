@@ -11,7 +11,7 @@ import {
   restorePurchases,
 } from '../services/RevenueCatService';
 
-const REVENUECAT_IOS_KEY = 'appl_xxx...';
+
 
 const FEATURES = [
   { icon: 'document-text', text: 'Unlimited AI Invoices & Quotes' },
@@ -36,7 +36,7 @@ export default function PaywallScreen({ navigation }) {
   const loadOfferings = async () => {
     setLoading(true);
     try {
-      const current = await getOfferings(REVENUECAT_IOS_KEY);
+      const current = await getOfferings();
       if (current) {
         setOffering(current);
         // Default: select monthly
