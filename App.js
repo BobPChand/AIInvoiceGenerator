@@ -7,11 +7,10 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as Notifications from 'expo-notifications';
 
 import DashboardScreen from './src/screens/DashboardScreen';
-import ChatScreen from './src/screens/ChatScreen';
-import TasksScreen from './src/screens/TasksScreen';
+import InvoiceScreen from './src/screens/InvoiceScreen';
 import InsightsScreen from './src/screens/InsightsScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
-import InvoiceScreen from './src/screens/InvoiceScreen';
+import PaywallScreen from './src/screens/PaywallScreen';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -42,9 +41,8 @@ export default function App() {
             tabBarIcon: ({ focused, color, size }) => {
               let iconName;
               if (route.name === 'Dashboard') iconName = focused ? 'grid' : 'grid-outline';
-              else if (route.name === 'Chat') iconName = focused ? 'chatbubble-ellipses' : 'chatbubble-ellipses-outline';
               else if (route.name === 'Invoice') iconName = focused ? 'document-text' : 'document-text-outline';
-              else if (route.name === 'Tasks') iconName = focused ? 'checkmark-circle' : 'checkmark-circle-outline';
+              else if (route.name === 'Upgrade') iconName = focused ? 'rocket' : 'rocket-outline';
               else if (route.name === 'Insights') iconName = focused ? 'bar-chart' : 'bar-chart-outline';
               else if (route.name === 'Settings') iconName = focused ? 'settings' : 'settings-outline';
               return <Ionicons name={iconName} size={size} color={color} />;
@@ -58,9 +56,8 @@ export default function App() {
           })}
         >
           <Tab.Screen name="Dashboard" component={DashboardScreen} />
-          <Tab.Screen name="Chat" component={ChatScreen} />
           <Tab.Screen name="Invoice" component={InvoiceScreen} />
-          <Tab.Screen name="Tasks" component={TasksScreen} />
+          <Tab.Screen name="Upgrade" component={PaywallScreen} options={{ headerTitle: 'Upgrade to Pro' }} />
           <Tab.Screen name="Insights" component={InsightsScreen} />
           <Tab.Screen name="Settings" component={SettingsScreen} />
         </Tab.Navigator>

@@ -20,7 +20,8 @@
         "NSMicrophoneUsageDescription": "AI Invoice Generator uses your microphone for hands-free voice input.",
         "NSSpeechRecognitionUsageDescription": "AI Invoice Generator uses speech recognition to capture invoice details from voice.",
         "ITSAppUsesNonExemptEncryption": false
-      }
+      },
+      "buildNumber": "6"
     },
     "android": {
       "adaptiveIcon": {
@@ -52,9 +53,9 @@
     "extra": {
       "apiEndpoint": "https://superagent-02ccfade.base44.app/functions/aiInvoice",
       "eas": {
-        "projectId": "9489c285-9888-4bdd-b7a9-2e91a696e752"
+        "projectId": "c550d8fe-693a-4652-b626-2027dd5cbfba"
       }
     },
-    "owner": "aibusinessassistant.ai"
+    "owner": "bc-canadian-usa-global-ventures-llc"
   }
 }
