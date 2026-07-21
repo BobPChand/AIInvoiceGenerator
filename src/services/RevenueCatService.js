@@ -2,7 +2,7 @@ import { Platform } from 'react-native';
 import Purchases, { LOG_LEVEL } from 'react-native-purchases';
 
 // RevenueCat Apple public key
-const REVENUECAT_IOS_KEY = 'test_HgrFwjJlIfzSkEmVgtLZoyqXsMl';
+const REVENUECAT_IOS_KEY = 'appl_DtsjBpZevhJmuQQdrArHcjsAptE';
 
 export const ENTITLEMENT_PRO = 'pro';
 
