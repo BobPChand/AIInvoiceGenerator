@@ -3,7 +3,7 @@
     "name": "AI Invoice Generator",
     "slug": "ai-invoice-generator",
     "version": "1.0.0",
-    "sdkVersion": "52.0.0",
+    "sdkVersion": "53.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -21,7 +21,7 @@
         "NSSpeechRecognitionUsageDescription": "AI Invoice Generator uses speech recognition to capture invoice details from voice.",
         "ITSAppUsesNonExemptEncryption": false
       },
-      "buildNumber": "10"
+      "buildNumber": "12"
     },
     "android": {
       "adaptiveIcon": {
@@ -34,7 +34,7 @@
         "RECEIVE_BOOT_COMPLETED",
         "VIBRATE"
       ],
-      "versionCode": 2
+      "versionCode": 3
     },
     "web": {
       "favicon": "./assets/favicon.png"
