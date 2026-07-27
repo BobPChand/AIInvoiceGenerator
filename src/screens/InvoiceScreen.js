@@ -12,6 +12,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { generateInvoice } from '../services/InvoiceService';
+import AIConsentModal, { useAIConsent } from '../components/AIConsentModal';
 
 const COUNTRIES = [
   { label: 'Canada', value: 'CA' },
@@ -27,6 +28,8 @@ export default function InvoiceScreen() {
   const [province, setProvince] = useState('ON');
   const [invoice, setInvoice] = useState(null);
   const [loading, setLoading] = useState(false);
+  const consent = useAIConsent();
+  const [pendingGenerate, setPendingGenerate] = useState(false);
 
   const canGenerate = useMemo(() => prompt.trim().length > 0, [prompt]);
 
@@ -35,7 +38,15 @@ export default function InvoiceScreen() {
       Alert.alert('Missing details', 'Please describe the invoice you want to create.');
       return;
     }
+    if (!consent.hasConsented) {
+      setPendingGenerate(true);
+      consent.requestConsent();
+      return;
+    }
+    doGenerate();
+  };
 
+  const doGenerate = async () => {
     setLoading(true);
     try {
       const result = await generateInvoice({ prompt, country, province });
@@ -45,6 +56,19 @@ export default function InvoiceScreen() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const onConsentAccept = async () => {
+    consent.accept();
+    if (pendingGenerate) {
+      setPendingGenerate(false);
+      doGenerate();
+    }
+  };
+
+  const onConsentDecline = () => {
+    consent.decline();
+    setPendingGenerate(false);
   };
 
   return (
@@ -131,6 +155,7 @@ export default function InvoiceScreen() {
           </View>
         )}
       </ScrollView>
+      <AIConsentModal visible={consent.showModal} onAccept={onConsentAccept} onDecline={onConsentDecline} />
     </SafeAreaView>
   );
 }

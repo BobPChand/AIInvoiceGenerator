@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Speech from 'expo-speech';
 import { sendMessage } from '../services/AIService';
+import AIConsentModal, { useAIConsent } from '../components/AIConsentModal';
 
 const COLORS = { primary: '#1E6FD9', dark: '#0A1628', bg: '#F2F4F8', card: '#fff', text: '#1C1C1E', sub: '#8E8E93' };
 
@@ -12,26 +13,54 @@ export default function ChatScreen() {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const scrollRef = useRef();
+  const consent = useAIConsent();
+  const [pendingMessage, setPendingMessage] = useState(null);
 
   const suggestions = ['Write a sales email', 'Prioritize my tasks', 'Summarize a meeting', 'Growth strategies'];
 
   const handleSend = async (text) => {
     const msg = (text || input).trim();
     if (!msg) return;
+    if (!consent.hasConsented) {
+      setPendingMessage(text || input);
+      consent.requestConsent();
+      return;
+    }
+    doSend(text || input);
+  };
+
+  const doSend = (msgText) => {
+    const msg = msgText.trim();
+    if (!msg) return;
     setInput('');
     const userMsg = { id: Date.now(), role: 'user', text: msg };
     setMessages(prev => [...prev, userMsg]);
     setLoading(true);
-    try {
-      const history = messages.map(m => ({ role: m.role, content: m.text }));
-      const reply = await sendMessage(msg, history);
-      setMessages(prev => [...prev, { id: Date.now() + 1, role: 'assistant', text: reply }]);
-    } catch {
-      setMessages(prev => [...prev, { id: Date.now() + 1, role: 'assistant', text: '❌ Error connecting to AI. Please try again.' }]);
-    } finally {
-      setLoading(false);
-      setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 100);
+    (async () => {
+      try {
+        const history = messages.map(m => ({ role: m.role, content: m.text }));
+        const reply = await sendMessage(msg, history);
+        setMessages(prev => [...prev, { id: Date.now() + 1, role: 'assistant', text: reply }]);
+      } catch {
+        setMessages(prev => [...prev, { id: Date.now() + 1, role: 'assistant', text: 'Error connecting to AI. Please try again.' }]);
+      } finally {
+        setLoading(false);
+        setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 100);
+      }
+    })();
+  };
+
+  const onConsentAccept = async () => {
+    consent.accept();
+    if (pendingMessage) {
+      doSend(pendingMessage);
+      setPendingMessage(null);
     }
+  };
+
+  const onConsentDecline = () => {
+    consent.decline();
+    setPendingMessage(null);
   };
 
   return (
@@ -79,6 +108,7 @@ export default function ChatScreen() {
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
+      <AIConsentModal visible={consent.showModal} onAccept={onConsentAccept} onDecline={onConsentDecline} />
     </SafeAreaView>
   );
 }
