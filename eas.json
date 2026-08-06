@@ -1,31 +1,33 @@
 {
-  "cli": {
-    "version": ">= 12.0.0",
-    "appVersionSource": "local"
-  },
-  "build": {
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal"
+    "cli": {
+        "version": ">= 12.0.0",
+        "appVersionSource": "local"
     },
-    "preview": {
-      "distribution": "internal",
-      "android": {
-        "buildType": "apk"
-      }
+    "build": {
+        "development": {
+            "developmentClient": true,
+            "distribution": "internal"
+        },
+        "preview": {
+            "distribution": "internal",
+            "android": {
+                "buildType": "apk"
+            }
+        },
+        "production": {
+            "autoIncrement": true,
+            "ios": {
+                "image": "macos-sequoia-15.6-xcode-26.0"
+            }
+        }
     },
-    "production": {
-      "autoIncrement": true,
-      "ios": {
-        "image": "macos-sequoia-15.6-xcode-26.0"
-      }
+    "submit": {
+        "production": {
+            "ios": {
+                "ascAppId": "6791894204",
+                "appleId": "bobchandroyalpacific@gmail.com",
+                "appleTeamId": "QU982T2P9S"
+            }
+        }
     }
-  },
-  "submit": {
-    "production": {
-      "ios": {
-        "ascAppId": "6789833497"
-      }
-    }
-  }
 }

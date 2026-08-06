@@ -42,6 +42,8 @@ export default function SettingsScreen() {
         { icon: 'information-circle', color: '#1E6FD9', label: 'Version', value: '1.0.0' },
         { icon: 'star', color: '#F5A623', label: 'Rate the App', action: () => Alert.alert('Thank you!', 'Rating coming soon on the App Store.') },
         { icon: 'mail', color: '#34C759', label: 'Contact Support', action: () => Linking.openURL('mailto:support@contentaipro.ai') },
+        { icon: 'shield-checkmark', color: '#1E6FD9', label: 'Privacy Policy', action: () => Linking.openURL('https://base44.app/api/apps/6a336a00b083ccbe02ccfade/files/mp/public/6a336a00b083ccbe02ccfade/c1756a0b6_privacy_policy_invoice_generator.html') },
+        { icon: 'document-text', color: '#1E6FD9', label: 'Terms of Use', action: () => Linking.openURL('https://base44.app/api/apps/6a336a00b083ccbe02ccfade/files/mp/public/6a336a00b083ccbe02ccfade/051bbf985_eula_invoice_ai.html') },
       ]
     }
   ];
