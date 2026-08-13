@@ -8,10 +8,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   getOfferings,
   purchasePackage,
+  purchaseProductDirect,
+  getProductsDirect,
   restorePurchases,
 } from '../services/RevenueCatService';
-
-
 
 const FEATURES = [
   { icon: 'document-text', text: 'Unlimited AI Invoices & Quotes' },
@@ -23,8 +23,10 @@ const FEATURES = [
 ];
 
 export default function PaywallScreen({ navigation }) {
-  const [offering, setOffering] = useState(null);
+  const [packages, setPackages] = useState([]);
+  const [directProducts, setDirectProducts] = useState([]);
   const [selectedPkg, setSelectedPkg] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [purchasing, setPurchasing] = useState(false);
   const [restoring, setRestoring] = useState(false);
@@ -37,13 +39,22 @@ export default function PaywallScreen({ navigation }) {
     setLoading(true);
     try {
       const current = await getOfferings();
-      if (current) {
-        setOffering(current);
-        // Default: select monthly
+      if (current && current.availablePackages && current.availablePackages.length > 0) {
+        setPackages(current.availablePackages);
         const monthly = current.availablePackages.find(
           p => p.identifier === '$rc_monthly' || p.identifier === 'monthly'
         ) || current.availablePackages[0];
         setSelectedPkg(monthly);
+      } else {
+        // Fallback: fetch products directly from StoreKit
+        const products = await getProductsDirect();
+        if (products.length > 0) {
+          setDirectProducts(products);
+          const monthly = products.find(p => p.identifier.includes('monthly')) || products[0];
+          setSelectedProduct(monthly);
+        } else {
+          Alert.alert('Error', 'Could not load subscription options. Please check your connection.');
+        }
       }
     } catch (e) {
       Alert.alert('Error', 'Could not load subscription options. Please check your connection.');
@@ -53,20 +64,18 @@ export default function PaywallScreen({ navigation }) {
   };
 
   const handlePurchase = async () => {
-    if (!selectedPkg) return;
+    if (!selectedPkg && !selectedProduct) return;
     setPurchasing(true);
     try {
-      const result = await purchasePackage(selectedPkg);
+      let result;
+      if (selectedPkg) {
+        result = await purchasePackage(selectedPkg);
+      } else {
+        result = await purchaseProductDirect(selectedProduct);
+      }
       if (result.success && result.isActive) {
-        const isLifetime = selectedPkg.packageType === 'LIFETIME' ||
-          selectedPkg.identifier === 'lifetime';
-        Alert.alert(
-          isLifetime ? 'Welcome — Forever!' : 'Welcome to Pro!',
-          isLifetime
-            ? 'You now have lifetime access. Thank you!'
-            : 'Your subscription is now active. Enjoy all features!',
-          [{ text: 'Get Started', onPress: () => navigation.replace('Home') }]
-        );
+        Alert.alert('Welcome to Pro!', 'Your subscription is now active. Enjoy all features!',
+          [{ text: 'Get Started', onPress: () => navigation.replace('Home') }]);
       }
     } catch (e) {
       Alert.alert('Purchase Failed', e.message || 'Something went wrong. Please try again.');
@@ -80,11 +89,8 @@ export default function PaywallScreen({ navigation }) {
     try {
       const result = await restorePurchases();
       if (result.isActive) {
-        Alert.alert(
-          'Purchase Restored',
-          'Your Pro access has been restored.',
-          [{ text: 'Continue', onPress: () => navigation.replace('Home') }]
-        );
+        Alert.alert('Purchase Restored', 'Your Pro access has been restored.',
+          [{ text: 'Continue', onPress: () => navigation.replace('Home') }]);
       } else {
         Alert.alert('Nothing to Restore', 'We could not find an active purchase for this Apple ID.');
       }
@@ -95,25 +101,39 @@ export default function PaywallScreen({ navigation }) {
     }
   };
 
-  const formatPrice = (pkg) => pkg?.product?.priceString || '';
+  const formatPrice = (item) => {
+    if (item?.product?.priceString) return item.product.priceString;
+    if (item?.priceString) return item.priceString;
+    return '';
+  };
 
-  const isSelected = (pkg) => selectedPkg?.identifier === pkg?.identifier;
+  const getIdentifier = (item) => {
+    return item?.identifier || item?.identifier || '';
+  };
 
-  const getPackageType = (pkg) => {
-    if (!pkg) return null;
-    const id = (pkg.identifier || '').toLowerCase();
-    if (id.includes('lifetime') || pkg.packageType === 'LIFETIME') return 'lifetime';
-    if (id.includes('annual') || pkg.packageType === 'ANNUAL') return 'yearly';
+  const getPackageType = (item) => {
+    if (!item) return 'monthly';
+    const id = (getIdentifier(item) || '').toLowerCase();
+    if (id.includes('annual') || id.includes('yearly') || item.packageType === 'ANNUAL') return 'yearly';
     return 'monthly';
   };
 
-  const getCTASubtext = () => {
-    if (!selectedPkg) return '';
-    const type = getPackageType(selectedPkg);
-    if (type === 'lifetime') return 'One-time purchase. Never pay again.';
-    if (type === 'yearly') return `Then ${formatPrice(selectedPkg)}/year · Cancel anytime`;
-    return `Then ${formatPrice(selectedPkg)}/month · Cancel anytime`;
+  const isItemSelected = (item) => {
+    if (selectedPkg) return selectedPkg?.identifier === item?.identifier;
+    return selectedProduct?.identifier === item?.identifier;
   };
+
+  const handleSelect = (item) => {
+    if (packages.length > 0) {
+      setSelectedPkg(item);
+      setSelectedProduct(null);
+    } else {
+      setSelectedProduct(item);
+      setSelectedPkg(null);
+    }
+  };
+
+  const getSelectedItem = () => selectedPkg || selectedProduct;
 
   if (loading) {
     return (
@@ -126,19 +146,15 @@ export default function PaywallScreen({ navigation }) {
     );
   }
 
-  const packages = offering?.availablePackages || [];
-
-  // Sort: monthly → yearly → lifetime
+  const allItems = packages.length > 0 ? packages : directProducts;
   const sortOrder = { monthly: 0, yearly: 1, lifetime: 2 };
-  const sortedPackages = [...packages].sort((a, b) => {
+  const sortedItems = [...allItems].sort((a, b) => {
     return (sortOrder[getPackageType(a)] ?? 3) - (sortOrder[getPackageType(b)] ?? 3);
   });
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
-
-        {/* Header */}
         <View style={styles.header}>
           <View style={styles.iconBadge}>
             <Ionicons name="sparkles" size={32} color="#fff" />
@@ -148,7 +164,6 @@ export default function PaywallScreen({ navigation }) {
           <Text style={styles.trial}>Start your 7-day FREE trial</Text>
         </View>
 
-        {/* Features */}
         <View style={styles.featuresCard}>
           {FEATURES.map((f, i) => (
             <View key={i} style={styles.featureRow}>
@@ -161,38 +176,32 @@ export default function PaywallScreen({ navigation }) {
           ))}
         </View>
 
-        {/* Plan Selector */}
         <View style={styles.plansColumn}>
-          {sortedPackages.map((pkg) => {
-            const type = getPackageType(pkg);
-            const selected = isSelected(pkg);
+          {sortedItems.map((item) => {
+            const type = getPackageType(item);
+            const selected = isItemSelected(item);
             return (
               <TouchableOpacity
-                key={pkg.identifier}
+                key={getIdentifier(item)}
                 style={[styles.planCard, selected && styles.planCardSelected]}
-                onPress={() => setSelectedPkg(pkg)}
+                onPress={() => handleSelect(item)}
               >
                 <View style={styles.planLeft}>
                   <Text style={[styles.planLabel, selected && styles.planLabelSelected]}>
-                    {type === 'lifetime' ? 'Lifetime' : type === 'yearly' ? 'Yearly' : 'Monthly'}
+                    {type === 'yearly' ? 'Yearly' : 'Monthly'}
                   </Text>
                   {type === 'yearly' && (
                     <View style={styles.planBadge}>
                       <Text style={styles.planBadgeText}>Save 33%</Text>
                     </View>
                   )}
-                  {type === 'lifetime' && (
-                    <View style={[styles.planBadge, { backgroundColor: '#FF9500' }]}>
-                      <Text style={styles.planBadgeText}>Best Value</Text>
-                    </View>
-                  )}
                 </View>
                 <View style={styles.planRight}>
                   <Text style={[styles.planPrice, selected && styles.planPriceSelected]}>
-                    {formatPrice(pkg)}
+                    {formatPrice(item)}
                   </Text>
                   <Text style={[styles.planPeriod, selected && styles.planPeriodSelected]}>
-                    {type === 'lifetime' ? 'one-time' : type === 'yearly' ? '/year' : '/month'}
+                    {type === 'yearly' ? '/year' : '/month'}
                   </Text>
                 </View>
                 {selected && (
@@ -203,36 +212,34 @@ export default function PaywallScreen({ navigation }) {
           })}
         </View>
 
-        {/* CTA */}
         <TouchableOpacity
           style={styles.ctaButton}
           onPress={handlePurchase}
-          disabled={purchasing || !selectedPkg}
+          disabled={purchasing || !getSelectedItem()}
         >
           {purchasing ? (
             <ActivityIndicator color="#fff" />
           ) : (
             <>
-              <Text style={styles.ctaText}>
-                {getPackageType(selectedPkg) === 'lifetime' ? 'Get Lifetime Access' : 'Start Free Trial'}
+              <Text style={styles.ctaText}>Start Free Trial</Text>
+              <Text style={styles.ctaSub}>
+                {getPackageType(getSelectedItem()) === 'yearly'
+                  ? `Then ${formatPrice(getSelectedItem())}/year \u00B7 Cancel anytime`
+                  : `Then ${formatPrice(getSelectedItem())}/month \u00B7 Cancel anytime`}
               </Text>
-              <Text style={styles.ctaSub}>{getCTASubtext()}</Text>
             </>
           )}
         </TouchableOpacity>
 
-        {/* Restore */}
         <TouchableOpacity style={styles.restoreButton} onPress={handleRestore} disabled={restoring}>
           {restoring
             ? <ActivityIndicator size="small" color="#8E8E93" />
             : <Text style={styles.restoreText}>Restore Purchases</Text>}
         </TouchableOpacity>
 
-        {/* Footer */}
         <Text style={styles.footer}>
           Payment will be charged to your Apple ID account. Subscriptions automatically renew unless cancelled at least 24 hours before the end of the current period. Manage subscriptions in App Store settings.
         </Text>
-
       </ScrollView>
     </SafeAreaView>
   );
@@ -253,23 +260,23 @@ const styles = StyleSheet.create({
   featureIcon: { width: 34, height: 34, borderRadius: 10, backgroundColor: '#EBF2FF', justifyContent: 'center', alignItems: 'center' },
   featureText: { flex: 1, fontSize: 15, color: '#1C1C1E' },
   plansColumn: { gap: 10, marginBottom: 20 },
-  planCard: { backgroundColor: '#fff', borderRadius: 16, padding: 16, flexDirection: 'row', alignItems: 'center', borderWidth: 2, borderColor: 'transparent', shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 4, elevation: 1 },
+  planCard: { backgroundColor: '#fff', borderRadius: 16, padding: 16, flexDirection: 'row', alignItems: 'center', borderWidth: 2, borderColor: 'transparent' },
   planCardSelected: { borderColor: '#1E6FD9', backgroundColor: '#EBF2FF' },
-  planLeft: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8 },
-  planRight: { alignItems: 'flex-end', marginRight: 8 },
-  planCheck: { marginLeft: 4 },
-  planBadge: { backgroundColor: '#34C759', borderRadius: 8, paddingHorizontal: 8, paddingVertical: 3 },
-  planBadgeText: { color: '#fff', fontSize: 11, fontWeight: '700' },
-  planLabel: { fontSize: 15, color: '#1C1C1E', fontWeight: '600' },
+  planLeft: { flex: 1 },
+  planLabel: { fontSize: 16, fontWeight: '700', color: '#1C1C1E' },
   planLabelSelected: { color: '#1E6FD9' },
-  planPrice: { fontSize: 18, fontWeight: 'bold', color: '#1C1C1E' },
+  planBadge: { backgroundColor: '#1E6FD9', borderRadius: 6, paddingHorizontal: 8, paddingVertical: 3, alignSelf: 'flex-start', marginTop: 6 },
+  planBadgeText: { fontSize: 10, fontWeight: '700', color: '#fff' },
+  planRight: { alignItems: 'flex-end' },
+  planPrice: { fontSize: 18, fontWeight: '700', color: '#1C1C1E' },
   planPriceSelected: { color: '#1E6FD9' },
-  planPeriod: { fontSize: 11, color: '#8E8E93' },
+  planPeriod: { fontSize: 12, color: '#8E8E93' },
   planPeriodSelected: { color: '#1E6FD9' },
-  ctaButton: { backgroundColor: '#1E6FD9', borderRadius: 16, padding: 18, alignItems: 'center', marginBottom: 12, shadowColor: '#1E6FD9', shadowOpacity: 0.3, shadowRadius: 10, elevation: 4 },
-  ctaText: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
-  ctaSub: { color: 'rgba(255,255,255,0.8)', fontSize: 12, marginTop: 4 },
-  restoreButton: { alignItems: 'center', paddingVertical: 12, marginBottom: 8 },
-  restoreText: { color: '#8E8E93', fontSize: 14, textDecorationLine: 'underline' },
-  footer: { textAlign: 'center', fontSize: 11, color: '#8E8E93', lineHeight: 16, marginTop: 8 },
+  planCheck: { marginLeft: 8 },
+  ctaButton: { backgroundColor: '#1E6FD9', borderRadius: 16, padding: 18, alignItems: 'center' },
+  ctaText: { fontSize: 18, fontWeight: '700', color: '#fff' },
+  ctaSub: { fontSize: 12, color: 'rgba(255,255,255,0.8)', marginTop: 4 },
+  restoreButton: { alignItems: 'center', marginTop: 16 },
+  restoreText: { fontSize: 14, color: '#1E6FD9', fontWeight: '600' },
+  footer: { fontSize: 11, color: '#C7C7CC', textAlign: 'center', marginTop: 16, lineHeight: 16 },
 });
