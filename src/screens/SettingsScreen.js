@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { View, Text, Switch, TouchableOpacity, ScrollView, StyleSheet, Linking, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import SiriShortcutsHelper from '../components/SiriShortcutsHelper';
 
-const COLORS = { primary: '#1E6FD9', bg: '#F2F4F8', card: '#fff', text: '#1C1C1E', sub: '#8E8E93' };
+const COLORS = { primary: '#1E6FD9', bg: '#0A1628', card: '#1C2E4A', text: '#FFFFFF', sub: '#8E8E93' };
 
-export default function SettingsScreen() {
+export default function SettingsScreen({ navigation }) {
   const [dailyBriefing, setDailyBriefing] = useState(false);
   const [taskReminders, setTaskReminders] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
 
   const openSettings = () => Linking.openSettings();
 
@@ -23,7 +23,7 @@ export default function SettingsScreen() {
     {
       title: 'Notifications',
       items: [
-        { icon: 'sunrise', color: '#F5A623', label: 'Daily Morning Briefing', toggle: true, state: dailyBriefing, set: setDailyBriefing },
+        { icon: 'sunny', color: '#F5A623', label: 'Daily Morning Briefing', toggle: true, state: dailyBriefing, set: setDailyBriefing },
         { icon: 'alarm', color: '#FF3B30', label: 'Task Reminders', toggle: true, state: taskReminders, set: setTaskReminders },
         { icon: 'settings', color: '#8E8E93', label: 'Notification Settings', action: openSettings },
       ]
@@ -60,6 +60,9 @@ export default function SettingsScreen() {
           <Text style={styles.profileSub}>AI Invoice Generator</Text>
         </View>
 
+        {/* Siri Voice Shortcuts Component */}
+        <SiriShortcutsHelper navigation={navigation} />
+
         {sections.map((section, si) => (
           <View key={si} style={styles.section}>
             <Text style={styles.sectionTitle}>{section.title}</Text>
@@ -91,17 +94,17 @@ export default function SettingsScreen() {
 }
 
 const styles = StyleSheet.create({
-  profileHeader: { alignItems: 'center', marginBottom: 28 },
+  profileHeader: { alignItems: 'center', marginBottom: 20 },
   avatar: { width: 72, height: 72, borderRadius: 36, backgroundColor: '#1E6FD9', justifyContent: 'center', alignItems: 'center', marginBottom: 10 },
   avatarText: { fontSize: 26, fontWeight: 'bold', color: '#fff' },
-  profileName: { fontSize: 20, fontWeight: 'bold', color: '#1C1C1E' },
+  profileName: { fontSize: 20, fontWeight: 'bold', color: '#FFF' },
   profileSub: { fontSize: 13, color: '#8E8E93', marginTop: 2 },
   section: { marginBottom: 20 },
   sectionTitle: { fontSize: 13, fontWeight: '600', color: '#8E8E93', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 },
-  card: { backgroundColor: '#fff', borderRadius: 16, overflow: 'hidden', shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 4, elevation: 1 },
+  card: { backgroundColor: '#1C2E4A', borderRadius: 16, overflow: 'hidden' },
   row: { flexDirection: 'row', alignItems: 'center', padding: 14, gap: 12 },
-  rowBorder: { borderBottomWidth: 1, borderBottomColor: '#F2F4F8' },
+  rowBorder: { borderBottomWidth: 1, borderBottomColor: '#0A1628' },
   iconBox: { width: 34, height: 34, borderRadius: 10, justifyContent: 'center', alignItems: 'center' },
-  rowLabel: { flex: 1, fontSize: 15, color: '#1C1C1E' },
+  rowLabel: { flex: 1, fontSize: 15, color: '#FFF' },
   rowValue: { fontSize: 14, color: '#8E8E93' },
 });

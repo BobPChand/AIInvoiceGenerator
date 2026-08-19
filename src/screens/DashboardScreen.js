@@ -3,6 +3,10 @@ import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-nati
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import AIFinancialInsights from '../components/AIFinancialInsights';
+import CashFlowForecast from '../components/CashFlowForecast';
+import OfflineModeBanner from '../components/OfflineModeBanner';
+
 export default function DashboardScreen({ navigation }) {
   const [greeting, setGreeting] = useState('');
   const [date, setDate] = useState('');
@@ -31,9 +35,19 @@ export default function DashboardScreen({ navigation }) {
     '🔔 Set task reminders so nothing slips through.',
   ];
 
+  const handleInsightAction = (insight) => {
+    if (insight.type === 'alert' || insight.type === 'risk') {
+      navigation.navigate('Invoice');
+    } else if (insight.type === 'forecast' || insight.type === 'growth') {
+      navigation.navigate('Insights');
+    } else {
+      navigation.navigate('Invoice');
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scroll}>
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View style={styles.header}>
           <View>
@@ -45,17 +59,26 @@ export default function DashboardScreen({ navigation }) {
           </View>
         </View>
 
+        {/* Offline Mode Banner */}
+        <OfflineModeBanner pendingCount={0} />
+
+        {/* AI Financial Insights Panel */}
+        <AIFinancialInsights onAction={handleInsightAction} />
+
         {/* AI Status Card */}
         <View style={styles.card}>
           <View style={styles.cardRow}>
             <Ionicons name="brain" size={28} color="#4A90E2" />
             <View style={styles.cardText}>
               <Text style={styles.cardTitle}>AI Assistant Ready</Text>
-              <Text style={styles.cardSub}>Powered by GPT-4o · AI Invoice Generator</Text>
+              <Text style={styles.cardSub}>Powered by GPT-4o · Personal CFO Active</Text>
             </View>
             <View style={styles.statusDot} />
           </View>
         </View>
+
+        {/* 30-Day Cash Flow Forecast Widget */}
+        <CashFlowForecast />
 
         {/* Quick Actions */}
         <Text style={styles.sectionTitle}>Quick Actions</Text>
@@ -91,23 +114,23 @@ export default function DashboardScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#0A1628' },
   scroll: { padding: 20 },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 },
+  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 },
   greeting: { fontSize: 24, fontWeight: 'bold', color: '#fff' },
   date: { fontSize: 14, color: '#8E8E93', marginTop: 2 },
   avatar: { width: 44, height: 44, borderRadius: 22, backgroundColor: '#4A90E2', alignItems: 'center', justifyContent: 'center' },
   avatarText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
-  card: { backgroundColor: '#1C2E4A', borderRadius: 16, padding: 16, marginBottom: 24 },
+  card: { backgroundColor: '#1C2E4A', borderRadius: 16, padding: 16, marginVertical: 12 },
   cardRow: { flexDirection: 'row', alignItems: 'center' },
   cardText: { flex: 1, marginLeft: 12 },
   cardTitle: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
   cardSub: { color: '#8E8E93', fontSize: 12, marginTop: 2 },
   statusDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#7ED321' },
-  sectionTitle: { color: '#8E8E93', fontSize: 13, fontWeight: '600', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 12 },
+  sectionTitle: { color: '#8E8E93', fontSize: 13, fontWeight: '600', textTransform: 'uppercase', letterSpacing: 1, marginTop: 12, marginBottom: 12 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12, marginBottom: 24 },
   actionCard: { backgroundColor: '#1C2E4A', borderRadius: 16, padding: 20, alignItems: 'center', width: '47%' },
   actionLabel: { color: '#fff', marginTop: 8, fontWeight: '600' },
   tipCard: { backgroundColor: '#1C2E4A', borderRadius: 16, padding: 16, marginBottom: 24 },
   tipText: { color: '#fff', fontSize: 15, lineHeight: 22 },
-  ctaButton: { backgroundColor: '#4A90E2', borderRadius: 16, padding: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 },
+  ctaButton: { backgroundColor: '#4A90E2', borderRadius: 16, padding: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: 20 },
   ctaText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
 });

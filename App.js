@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Notifications from 'expo-notifications';
 
 import DashboardScreen from './src/screens/DashboardScreen';
@@ -11,7 +12,10 @@ import InvoiceScreen from './src/screens/InvoiceScreen';
 import InsightsScreen from './src/screens/InsightsScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 import PaywallScreen from './src/screens/PaywallScreen';
+import OnboardingScreen, { APP_CONFIGS } from './src/components/OnboardingScreen';
+import { incrementSessionCount } from './src/utils/SmartRatingPrompt';
 import { initializeRevenueCat } from './src/services/RevenueCatService';
+import { initSiriShortcuts } from './src/components/SiriShortcutsHelper';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -24,14 +28,37 @@ Notifications.setNotificationHandler({
 const Tab = createBottomTabNavigator();
 
 export default function App() {
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [isReady, setIsReady] = useState(false);
+
   useEffect(() => {
-    registerForPushNotifications();
-    initializeRevenueCat();
+    (async () => {
+      const done = await AsyncStorage.getItem('onboarding_completed');
+      if (!done) setShowOnboarding(true);
+      await incrementSessionCount();
+      registerForPushNotifications();
+      initializeRevenueCat();
+      await initSiriShortcuts();
+      setIsReady(true);
+    })();
   }, []);
 
   async function registerForPushNotifications() {
     const { status } = await Notifications.requestPermissionsAsync();
     if (status !== 'granted') return;
+  }
+
+  if (!isReady) return null;
+
+  if (showOnboarding) {
+    return (
+      <SafeAreaProvider>
+        <OnboardingScreen
+          appConfig={APP_CONFIGS.InvoiceAI}
+          onComplete={() => setShowOnboarding(false)}
+        />
+      </SafeAreaProvider>
+    );
   }
 
   return (
