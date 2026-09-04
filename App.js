@@ -12,6 +12,7 @@ import InvoiceScreen from './src/screens/InvoiceScreen';
 import InsightsScreen from './src/screens/InsightsScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 import PaywallScreen from './src/screens/PaywallScreen';
+import AvatarVideoScreen from './src/screens/AvatarVideoScreen';
 import OnboardingScreen, { APP_CONFIGS } from './src/components/OnboardingScreen';
 import { incrementSessionCount } from './src/utils/SmartRatingPrompt';
 import { initializeRevenueCat } from './src/services/RevenueCatService';
@@ -71,6 +72,7 @@ export default function App() {
               let iconName;
               if (route.name === 'Dashboard') iconName = focused ? 'grid' : 'grid-outline';
               else if (route.name === 'Invoice') iconName = focused ? 'document-text' : 'document-text-outline';
+              else if (route.name === 'AI Video Message') iconName = focused ? 'videocam' : 'videocam-outline';
               else if (route.name === 'Upgrade') iconName = focused ? 'rocket' : 'rocket-outline';
               else if (route.name === 'Insights') iconName = focused ? 'bar-chart' : 'bar-chart-outline';
               else if (route.name === 'Settings') iconName = focused ? 'settings' : 'settings-outline';
@@ -86,6 +88,7 @@ export default function App() {
         >
           <Tab.Screen name="Dashboard" component={DashboardScreen} />
           <Tab.Screen name="Invoice" component={InvoiceScreen} />
+          <Tab.Screen name="AI Video Message" component={AvatarVideoScreen} />
           <Tab.Screen name="Upgrade" component={PaywallScreen} options={{ headerTitle: 'Upgrade to Pro' }} />
           <Tab.Screen name="Insights" component={InsightsScreen} />
           <Tab.Screen name="Settings" component={SettingsScreen} />

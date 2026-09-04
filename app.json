@@ -2,12 +2,12 @@
   "expo": {
     "name": "AI Invoice Generator",
     "slug": "ai-invoice-generator",
-    "version": "1.2.0",
+    "version": "1.3.1",
     "sdkVersion": "53.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
+    "newArchEnabled": false,
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -24,7 +24,7 @@
           1
         ]
       },
-      "buildNumber": "30"
+      "buildNumber": "101"
     },
     "android": {
       "adaptiveIcon": {

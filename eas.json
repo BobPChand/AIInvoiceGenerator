@@ -1,33 +1,34 @@
 {
-    "cli": {
-        "version": ">= 12.0.0",
-        "appVersionSource": "local"
+  "cli": {
+    "version": ">= 12.0.0",
+    "appVersionSource": "local"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
     },
-    "build": {
-        "development": {
-            "developmentClient": true,
-            "distribution": "internal"
-        },
-        "preview": {
-            "distribution": "internal",
-            "android": {
-                "buildType": "apk"
-            }
-        },
-        "production": {
-            "autoIncrement": true,
-            "ios": {
-                "image": "macos-sequoia-15.6-xcode-26.0"
-            }
-        }
+    "preview": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      }
     },
-    "submit": {
-        "production": {
-            "ios": {
-                "ascAppId": "6791894204",
-                "appleId": "bobchandroyalpacific@gmail.com",
-                "appleTeamId": "QU982T2P9S"
-            }
-        }
+    "production": {
+      "autoIncrement": true,
+      "ios": {
+        "image": "macos-sequoia-15.6-xcode-26.0"
+      }
     }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "ascApiKeyPath": "/app/.agents/AuthKey_MQRH8V5T6F.p8",
+        "ascApiKeyId": "MQRH8V5T6F",
+        "ascApiKeyIssuerId": "a5c5d541-229b-498d-bc8c-0d0da6e204a3",
+        "ascAppId": "6791894204"
+      }
+    }
+  }
 }
